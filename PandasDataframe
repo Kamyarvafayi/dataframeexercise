@@ -1,0 +1,131 @@
+def fact (a:float)->float:
+    if a==0:
+        return 1.0
+    elif a > 0:
+        factorial = 1.0;
+        for i in range(1,a+1):
+            factorial = factorial*i
+        return factorial
+    else:
+        print("Your number must be non-negative")    
+import numpy as np
+b = int(input("enter a number: "))
+a = [1 for i in range(b+1)]
+a2 = np.array(a)
+for i in range(b+1):
+    a[i] = fact(i)
+import pandas as pd
+c = [i for i in range(b+1)]
+Data = {"Number":c , "Factorial":a}
+df = pd.DataFrame(Data)
+
+df2 = pd.DataFrame(list(zip(a, c)),columns=["Factorial","Number"],index = c)
+df.iloc[4][0]
+df.loc[4]["Factorial"]
+df["Factorial"][4]
+# df.drop(labels="Number",axis = 1)
+# In[]: adding a new row
+for j in range(b+1,21):   
+    df.loc[j] = [fact(j),j]
+
+# In[]: at, iat, loc, iloc
+print(df.loc[1,"Number"])
+print(df.at[1,"Number"])
+print(df.iloc[1,0])
+print(df.iat[1,0])
+# In[]: adding a new column to DataFrame
+newrow = [np.random.exponential(10) for k in range(df.shape[0])]
+df["RandomRow"] = newrow
+# or
+df.insert(2,"RandomRow2", newrow)
+# In[]: searching for sth in indices or rows
+df.index.argmax()
+df.set_index("Number")
+df.index.max()
+df.index
+df.keys()
+# In[]: Filtering dataframe
+df.loc[df["Factorial"]<30]
+df.loc[(df["Factorial"]<30) | (df["RandomRow"]<3)]
+df.loc[((df["Factorial"]>24) | (df["RandomRow"]<3)) & ((df["Factorial"] + df["RandomRow"])>20)]
+df.loc[((df["Factorial"]>24) | (df["RandomRow"]<3)) & ((df["Factorial"] + df["RandomRow"])>125)]
+# In[]: NA
+df.loc[22] = [fact(20),22, np.nan,np.nan]
+print(df.loc[~ pd.isna(df["RandomRow"])])
+print(df.loc[pd.isna(df["RandomRow"])])
+print(df.loc[pd.notna(df["RandomRow"])])
+dfwithoutnan1 = df.dropna(axis=0, how = 'any',inplace = False)
+dfwithoutnan2 = df.dropna(axis=0, how = 'all',inplace = False)
+dfwithoutnan3 = df.dropna(axis=0, thresh = 3,inplace = False)
+dfwithoutnan4 = df.dropna(axis=0, thresh = 5,inplace = False)
+
+dffilledna = df.fillna(0)
+print(dffilledna)
+dffilledna2 = df.fillna(0, limit=1)
+print(dffilledna2)
+
+# In[]: Duplicates
+df.loc[21] = df.loc[19]
+dfwithoutduplicate = df.drop_duplicates(keep='first',inplace = False)
+# In[]: Sort
+sortedindexdf = df.sort_index()
+sorteddf1 = df.sort_values("RandomRow",axis = 0)
+sorteddf2 = df.sort_values(10,axis = 1)
+# In[]: changing index
+df["Alt Index"] = np.arange(10,df.shape[0]+10)
+dfwithnewindex = df.set_index("Alt Index", drop = True)
+# In[]: sort
+dfsorted1 = df.sort_values(by = "RandomRow2", inplace= False, na_position = 'first' )
+dfsorted2 = df.sort_values(by = ["Factorial", "RandomRow"], inplace= False, ascending = False, na_position = 'first' )
+# In[]: Creating new DataFrame
+Newdf = pd.DataFrame( df.values, columns = ["Fact","Num","RandNum2","RandNum1","Alt Index"], index = np.arange(30,df.shape[0]+30))
+print(Newdf)
+# In[]: Dataframe shape and size
+print(df.size)
+print(df.shape)
+
+# In[]: Dataframe head and number of first n largest or smallest
+print(df.head(10))
+
+print(df.sort_values(by = ["Factorial", "RandomRow"], inplace= False, ascending = False, na_position = 'first' ).head(10))
+# In[]: nsmallest and nlargest
+print(df.nsmallest(10, ["Factorial", "RandomRow"]))
+print(df.nlargest(10, ["Factorial", "RandomRow"]))
+
+# In[]: Dataframe Drop (df3 and df5 are same. df4 and df 6 are same.)
+df3 = df.drop(axis = 0, labels = [1,2,5], inplace = False)
+df4 = df.drop(axis = 1, labels = ["Factorial"], inplace = False)
+df5 = df.drop(index = [1,2,5], inplace = False)
+df6 = df.drop(columns = ["Factorial"], inplace = False)
+
+# In[]: str methods on Text
+df['Name'] = np.array(["Number {}".format(df.loc[i , "Number"]) for i in df.index])
+print(df[df["Name"].str.contains("1.")])
+print(df["Name"].str.len())
+print(df["Name"].str.lower())
+print(df["Name"].str.capitalize())
+print(df["Name"].str.title())
+print(df["Name"].str.upper())
+# In[]: Group By
+df['Gender'] = np.random.randint(0,2, df.shape[0])
+dfgroup1 , dfgroup2 = df.groupby(by="Gender")
+
+# In[]: Join (Example 1)
+dataframe1 = pd.DataFrame({"Key": ['A','B','C', 'D'], "Score": [20,14,12,3]})
+dataframe2 = pd.DataFrame(data= [["A", 10,"1"],["B",20,"2"],["E",50,"3"]], index=[0,1,2], columns = ["Key", "score2","Name"])
+print(dataframe1.join(dataframe2, how = 'outer', lsuffix='_caller', rsuffix='_other'))
+print(dataframe2.join(dataframe1.set_index("Key"), how = 'outer',on = 'Key'))
+print(dataframe1.join(dataframe2.set_index("Key"), how = 'inner', on = "Key"))
+print(dataframe1.join(dataframe2.set_index("Key"), how = 'left', on = "Key"))
+print(dataframe1.join(dataframe2.set_index("Key"), how = 'right', on = "Key"))
+
+# In[]: (Example 2)
+productdic = {"ProductID": [1,2,3,4,5,6,7,8,9], "Product": ['Potato','Avocado','Kiwi','Onion','Melon','Orange','Tomato','Brocolli','Squash']}
+dfProducts = pd.DataFrame(productdic)
+Pricesdf = pd.DataFrame({"Product":['Potato','Avocado','Kiwi','Onion','Melon','Orange','Tomato'],"Price":[3,4,2,1,5,5,6]})
+Quantitiesdf = pd.DataFrame({"Product":['Potato','Avocado','Kiwi','Onion','Melon','Brocolli','Squash'],"Quantity":[45,63,19,20,66,27,92]})
+lje = Pricesdf.join(dfProducts.set_index("Product"),how='left',on='Product')
+lje1 = Pricesdf.join(Quantitiesdf.set_index("Product"),how='left',on='Product')
+Rje =  Quantitiesdf.join(Pricesdf.set_index("Product"),how='right',on='Product')
+Oje =  Pricesdf.join(Quantitiesdf.set_index("Product"),how='outer',on='Product')
+Ije = Pricesdf.join(Quantitiesdf.set_index("Product"),how='inner',on='Product')
