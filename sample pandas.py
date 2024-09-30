@@ -1,3 +1,30 @@
+# In[] for tranforming Jalali to Gregorian and Vice Versa
+# import jdatetime
+# import jalali_pandas
+# # gregorian_date = jdatetime.date(1396, 2, 30).togregorian()
+# # current_Year = datetime.today().year
+# # current_Month = datetime.today().month
+# # current_Day = datetime.today().day
+
+# # jalili_date = jdatetime.datetime.fromgregorian(day = current_Day, month=current_Month, year=current_Year)
+# # # jalili_date = datetime.strptime(str(jalili_date), '%Y-%m-%d %H:%M:%S')
+# # Gregorian_Date = jdatetime.date.togregorian(jalili_date)
+
+# Gregorian_Date = datetime.date(datetime.today())
+
+# CurrentTime = datetime.strptime(str('07:00:00'), '%H:%M:%S')
+# CurrentCombinedDateTime = datetime.combine(Gregorian_Date, CurrentTime.time())
+
+# MachinePlannedTime = {}
+# MachinePlannedTime2 = {}
+# MachinePlannedTime3 = {}
+# Last_Product_M = {}
+
+# PlanStatusTable['Date'] = PlanStatusTable['Date'].astype(str)
+# PlanStatusTable['Date'] = PlanStatusTable['Date'].jalali.parse_jalali("%Y%m%d")
+# PlanStatusTable['Date'] = PlanStatusTable['Date'].jalali.to_gregorian()
+
+# In[]: The Main Part
 import pandas as pd
 
 mysource = pd.read_excel(r'C:/Users/k.vafaeinejad/Desktop/Test.xlsx')
